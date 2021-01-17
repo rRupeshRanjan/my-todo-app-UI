@@ -1,4 +1,4 @@
-.TaskTable{
+.TaskTable {
     width: 100%;
     text-align: center;
     border-collapse: collapse;
@@ -27,10 +27,6 @@
   padding: 10px;
 }
 
-.Action {
-  colspan: 2;
-}
-
-tr:nth-child(even) {
+tbody tr:nth-child(odd) {
   background-color: #add8e6;
 }

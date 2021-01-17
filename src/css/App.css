@@ -1,9 +1,26 @@
 .App-header {
-  background-color: #ff2c34;
+  background-color: #008080;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
   padding: 15px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.To-Do {
+    width: 20%;
+    text-align: center;
+}
+
+.Time-Block {
+    width: 70%;
+    text-align: center;
+}
+
+.Search {
+    width: 10%;
 }

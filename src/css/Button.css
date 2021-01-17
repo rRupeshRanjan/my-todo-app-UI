@@ -1,0 +1,12 @@
+.button {
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 14px;
+    background-color: #e7e7e7;
+    color: black;
+}
+
+.icon {
+    height: 20px;
+    width: 20px;
+}
