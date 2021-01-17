@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+![TODO APP](https://github.com/rRupeshRanjan/my-todo-app-UI/blob/master/src/images/todo-app.png)
+
+# Todo App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
