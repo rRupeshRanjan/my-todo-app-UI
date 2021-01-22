@@ -11,22 +11,22 @@
 }
 
 .DescriptionColumn {
-  width: 30%;
+    width: 30%;
 }
 
 .TitleColumn {
-  width: 25%;
+    width: 25%;
 }
 
 .OtherColumns {
-  width: 15%;
+    width: 15%;
 }
 
 .Value {
-  border-collapse: collapse;
-  padding: 10px;
+    border-collapse: collapse;
+    padding: 10px;
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #add8e6;
+    background-color: #add8e6;
 }

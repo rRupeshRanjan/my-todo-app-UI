@@ -26,8 +26,7 @@ export default function Button(props) {
 	return (
         <button onClick={onClickHandler}
                 style={{display: getVisibility(props.visibility)}}
-                title={props.id}
-        >
+                title={props.id}>
             <img src={getImageForButton(props.id)} alt={props.id} className="icon" />
         </button>
     );
