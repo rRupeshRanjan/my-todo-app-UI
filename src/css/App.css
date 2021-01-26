@@ -12,15 +12,11 @@
 }
 
 .To-Do {
-    width: 20%;
-    text-align: center;
+    width: 50%;
+    text-align: right;
 }
 
 .Time-Block {
-    width: 70%;
-    text-align: center;
-}
-
-.Search {
-    width: 10%;
+    width: 50%;
+    text-align: right;
 }

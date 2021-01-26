@@ -18,7 +18,6 @@ export default class App extends Component {
                 <div className="App-header">
                     <div className="To-Do"> To-Do App </div>
                     <div className="Time-Block"> {this.state.currTime} </div>
-                    <input className="Search" type="text" placeholder="Search.." />
                 </div>
                 <TaskGrid/>
             </>
