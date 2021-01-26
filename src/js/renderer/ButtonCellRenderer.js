@@ -23,7 +23,7 @@ export default class ButtonCellRenderer extends Component {
                 </button>
                 <button
                     title='done'
-                    onClick={ () => this.props.markDoneAction(this.props.data.id) }
+                    onClick={ () => this.props.markDoneAction(this.props.data) }
                     style={{ cursor: getCursorForAction(this.props.data.status) }}
                     disabled={isButtonDisabled(this.props.data.status)}>
                     <img src={getImageForButton('done')} alt={'done'} className="icon" />
