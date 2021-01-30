@@ -1,55 +1,39 @@
-import React, { Component } from 'react';
+import { IconButton } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
+import { Delete, Edit, DoneAll } from '@material-ui/icons';
 
-import '../../css/Button.css';
-import edit from '../../images/edit.png'
-import remove from '../../images/remove.png'
-import done from '../../images/done.png'
+export default function ButtonCellRenderer(props) {
+    var buttonDisabled = isButtonDisabled(props.data.status);
 
-export default class ButtonCellRenderer extends Component {
-    render() {
-        return (
-            <div>
-                <button
-                    title='edit'
-                    onClick={ () => this.props.editAction(this.props.data.id) }
-                    style={{ cursor: getCursorForAction(this.props.data.status) }}
-                    disabled={isButtonDisabled(this.props.data.status)}>
-                    <img src={getImageForButton('edit')} alt={'edit'} className="icon" />
-                </button>
-                <button
-                    title='remove'
-                    onClick={ () => this.props.deleteAction(this.props.data.id) }>
-                    <img src={getImageForButton('remove')} alt={'remove'} className="icon" />
-                </button>
-                <button
-                    title='done'
-                    onClick={ () => this.props.markDoneAction(this.props.data) }
-                    style={{ cursor: getCursorForAction(this.props.data.status) }}
-                    disabled={isButtonDisabled(this.props.data.status)}>
-                    <img src={getImageForButton('done')} alt={'done'} className="icon" />
-                </button>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <IconButton
+                title='edit' variant='contained' color='primary'
+                onClick={ () => props.editAction(props.data.id) }
+                disabled={buttonDisabled}>
+                <Edit/>
+            </IconButton>
+
+            <IconButton
+                title='mark done' variant='contained'
+                onClick={ () => props.markDoneAction(props.data) }
+                disabled={buttonDisabled}>
+                { getMarkDoneButtonWithStyle(buttonDisabled) }
+            </IconButton>
+
+            <IconButton
+                title='remove' variant='contained' color='secondary'
+                onClick={ () => props.deleteAction(props.data.id) }>
+                <Delete/>
+            </IconButton>
+        </div>
+    );
 }
 
-function getImageForButton(action) {
-    switch (action) {
-    case "edit":
-        return edit;
-    case "remove":
-        return remove;
-    case "done":
-        return done;
-    default:
-        return ' ';
-    }
-}
-
-function getCursorForAction(status) {
-    return status === 'Done' ? 'not-allowed' : 'allowed';
+function getMarkDoneButtonWithStyle(buttonDisabled) {
+    return (buttonDisabled) ? (<DoneAll/>) : (<DoneAll style={{color: green[900] }}/>);
 }
 
 function isButtonDisabled(status) {
-    return getCursorForAction(status) !== 'allowed' ? true: false;
+    return status === 'Done';
 }
