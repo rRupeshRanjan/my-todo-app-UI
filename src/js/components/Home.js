@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
-import DateRenderer from './renderer/Utils.js'
-import ButtonCellRenderer from './renderer/ButtonCellRenderer.js';
+import utils from '../renderer/Utils'
+import ButtonCellRenderer from '../renderer/ButtonCellRenderer';
 
-import '../css/TaskGrid.css';
+import '../../css/home.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
@@ -28,8 +28,7 @@ export default class TaskGrid extends Component {
     }
 
     editHandler = (taskId) => {
-        // TODO: Implement this
-        console.log("please implement me first, huh!!")
+        this.props.history.push(`/task/${taskId}`)
     }
 
     onGridReady = (params) => {
@@ -68,14 +67,14 @@ export default class TaskGrid extends Component {
                     headerName: 'Added on',
                     field: 'added_on',
                     colId: 'added_on',
-                    cellRenderer: DateRenderer,
+                    cellRenderer: utils.DateRenderer,
                     sortable: true,
                 },
                 {
                     headerName: 'Due by',
                     field: 'due_by',
                     colId: 'due_by',
-                    cellRenderer: DateRenderer,
+                    cellRenderer: utils.DateRenderer,
                     sortable: true,
                 },
                 {

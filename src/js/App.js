@@ -1,26 +1,22 @@
-import '../css/App.css';
-import TaskGrid from './TaskGrid.js';
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import Header from './components/Header';
+import Home from './components/Home';
+import Task from './components/Task';
 
 export default class App extends Component {
-    state = {}
-    componentDidMount() {
-        setInterval(() => {
-            this.setState({
-                currTime : new Date().toLocaleString()
-            })
-        }, 100)
-    }
-
     render() {
         return (
-            <>
-                <div className="App-header">
-                    <div className="To-Do"> To-Do App </div>
-                    <div className="Time-Block"> {this.state.currTime} </div>
+            <BrowserRouter>
+                <div>
+                    <Header/>
+                    <Switch>
+                        <Route path="/" component={Home} exact/>
+                        <Route path="/task/:id" component={Task}/>
+                    </Switch>
                 </div>
-                <TaskGrid/>
-            </>
+            </BrowserRouter>
         );
     }
 }
