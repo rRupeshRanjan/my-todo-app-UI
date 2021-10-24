@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TextField } from '@material-ui/core';
 import axios from 'axios';
-import utils from '../renderer/Utils';
+import utility from '../renderer/Utility';
 import { Button } from '@material-ui/core';
 
 export default class Task extends Component {
@@ -26,11 +26,10 @@ export default class Task extends Component {
 
     setTitle       = event => this.setState({ title: event.target.value });
     setDescription = event => this.setState({ description: event.target.value });
-    setAddedOn     = event => this.setState({ added_on: utils.ConvertDateToEpoch(event.target.value) });
-    setDueBy       = event => this.setState({ due_by: utils.ConvertDateToEpoch(event.target.value) });
+    setAddedOn     = event => this.setState({ added_on: utility.ConvertDateToEpoch(event.target.value) });
+    setDueBy       = event => this.setState({ due_by: utility.ConvertDateToEpoch(event.target.value) });
 
     render() {
-        console.log(this.state.title)
         return (
           <div style={{ padding: '10px' }}>
             <Button
@@ -77,7 +76,7 @@ export default class Task extends Component {
                 type="datetime-local"
                 variant="outlined"
                 onChange={this.setAddedOn}
-                defaultValue={ utils.EpochToFormattedDateString(this.state.added_on, "yyyy-MM-DDTHH:mm") }
+                defaultValue={ utility.EpochToFormattedDateString(this.state.added_on, "yyyy-MM-DDTHH:mm") }
               />
               <TextField
                 style={{ float: 'right' }}
@@ -86,7 +85,7 @@ export default class Task extends Component {
                 type="datetime-local"
                 variant="outlined"
                 onChange={this.setDueBy}
-                defaultValue={ utils.EpochToFormattedDateString(this.state.due_by, "yyyy-MM-DDTHH:mm") }
+                defaultValue={ utility.EpochToFormattedDateString(this.state.due_by, "yyyy-MM-DDTHH:mm") }
               />
             </div>
           </div>

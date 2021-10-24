@@ -12,7 +12,15 @@ class Utils {
     ConvertDateToEpoch(date) {
         return moment(date).valueOf();
     }
+
+    GetCurrentDate(format) {
+        return moment().format(format).toString();
+    }
+
+    ConvertDateFormat(date, format) {
+        return moment(date).format(format).toString();
+    }
 }
 
-const utils = new Utils();
-export default utils;
+const utility = new Utils();
+export default utility;

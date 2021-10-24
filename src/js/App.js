@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 import Task from './components/Task';
+import DigitalGoldPrices from './components/DigitalGoldPrices'
 
 export default class App extends Component {
     render() {
@@ -12,8 +13,9 @@ export default class App extends Component {
                 <div>
                     <Header/>
                     <Switch>
-                        <Route path="/" component={Home} exact/>
+                        <Route path="/todo" component={Home} exact/>
                         <Route path="/task/:id" component={Task}/>
+                        <Route path="/gold-prices" component={DigitalGoldPrices} exact/>
                     </Switch>
                 </div>
             </BrowserRouter>
