@@ -20,6 +20,10 @@ class Utils {
     ConvertDateFormat(date, format) {
         return moment(date).format(format).toString();
     }
+
+    ConvertStringToDate(date) {
+        return moment(date);
+    }
 }
 
 const utility = new Utils();

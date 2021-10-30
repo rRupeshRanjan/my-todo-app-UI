@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Header from './components/Header';
-import Home from './components/Home';
-import Task from './components/Task';
+import Header from './components/Header'
+import Home from './components/Home'
+import Task from './components/Task'
 import DigitalGoldPrices from './components/DigitalGoldPrices'
 
 export default class App extends Component {

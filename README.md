@@ -1,4 +1,5 @@
 ![TODO APP](https://github.com/rRupeshRanjan/my-todo-app-UI/blob/master/src/images/todo-app.png)
+![Digital Gold Prices](https://github.com/rRupeshRanjan/my-todo-app-UI/blob/master/src/images/digital-gold-prices.png)
 
 # Todo App
 
