@@ -24,6 +24,13 @@ class Utils {
     ConvertStringToDate(date) {
         return moment(date);
     }
+
+    FormatString(string, inputs) {
+        for (let i=0; i<inputs.length; i++) {
+            string = string.replace("{" + i + "}", inputs[i]);
+        }
+        return string
+    }
 }
 
 const utility = new Utils();

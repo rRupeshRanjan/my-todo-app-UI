@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import utility from '../renderer/Utility';
 import { CanvasJSChart } from 'canvasjs-react-charts';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, InputAdornment } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 import DateAdapter from '@material-ui/lab/AdapterMoment';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
@@ -10,33 +10,36 @@ import DatePicker from '@material-ui/lab/DatePicker';
 
 export default class DigitalGoldPrices extends Component {
     state = {}
+    config = require('../../config').configs;
 
     updateChartData = (results) => {
-        var priceData = [], buyPrice = [], sellPrice = [];
+        var priceData = [], buyPrices = [], sellPrices = [];
         var minimumPrice = 99999999999, maximumPrice = 0;
         var minimumDate = '', maximumDate = '';
 
         for(let i=0; i<results.data.length; i++) {
             var currPrice = Number(results.data[i].price);
+            var buyPrice = Number((currPrice * 1.03).toFixed(2));
+            var sellPrice = Number((currPrice / 1.03).toFixed(2));
             var currDate = results.data[i].date;
 
             priceData.push({ label: currDate, y: currPrice });
-            buyPrice.push({ label: currDate, y: currPrice * 1.03 });
-            sellPrice.push({ label: currDate, y: currPrice / 1.03 });
+            buyPrices.push({ label: currDate, y: buyPrice });
+            sellPrices.push({ label: currDate, y: sellPrice });
 
-            minimumPrice = Math.min(minimumPrice, currPrice / 1.03);
-            maximumPrice = Math.max(maximumPrice, currPrice * 1.03);
+            minimumPrice = Math.min(minimumPrice, sellPrice);
+            maximumPrice = Math.max(maximumPrice, buyPrice);
 
             if(i === 0)
                 minimumDate = currDate;
-            if(i === results.data.length-1)
+            else if(i === results.data.length-1)
                 maximumDate = currDate;
         }
 
         this.setState({
             price: priceData,
-            buyPrice: buyPrice,
-            sellPrice: sellPrice,
+            buyPrices: buyPrices,
+            sellPrices: sellPrices,
             minimumPrice: minimumPrice - 100,
             maximumPrice: maximumPrice + 100,
             minimumDate: utility.ConvertStringToDate(minimumDate),
@@ -44,13 +47,14 @@ export default class DigitalGoldPrices extends Component {
             buyDate: minimumDate,
             sellDate: maximumDate,
             isLoaded: true,
+            weight: 0
         });
         this.setProfit();
     }
 
     setProfit = () => {
-        axios.get(`http://localhost:8080/pnl/calculatePnl?buyDate=${this.state.buyDate}&sellDate=${this.state.sellDate}`)
-            .then(results => this.setState({ profit: results.data.PnL.toFixed(2) }));
+        axios.get(utility.FormatString(this.config.pnlCalculateUrl, [this.state.buyDate, this.state.sellDate]))
+            .then(results => this.setState({ profit: Number(results.data.PnL * this.state.weight).toFixed(2) }));
     }
 
     setSellDate = (date) => {
@@ -61,9 +65,13 @@ export default class DigitalGoldPrices extends Component {
         this.setState({ buyDate: utility.ConvertDateFormat(date, "YYYY-MM-DD") });
     }
 
+    setWeight = (event) => {
+        this.setState({ weight: event.target.value });
+    }
+
     refreshHandler = () => {
-        axios.post(`http://localhost:8080/digital-gold-prices/save-historical-prices`)
-            .then(() => axios.get(`http://localhost:8080/digital-gold-prices/get-historical-prices`))
+        axios.post(this.config.basePriceUrl + this.config.savePricesPath)
+            .then(() => axios.get(this.config.basePriceUrl + this.config.getHistoricalPricesPath))
             .then(results => this.updateChartData(results));
     }
 
@@ -76,7 +84,7 @@ export default class DigitalGoldPrices extends Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:8080/digital-gold-prices/get-historical-prices`)
+        axios.get(this.config.basePriceUrl + this.config.getHistoricalPricesPath)
             .then(results => this.updateChartData(results));
     }
 
@@ -85,7 +93,7 @@ export default class DigitalGoldPrices extends Component {
             animationEnabled: true,
             exportEnabled: true,
             zoomEnabled: true,
-            theme: "dark1", // "light1", "dark1", "dark2"
+            theme: "light1", // "dark2"
             title:{
                 text: "Historical Gold Prices"
             },
@@ -97,7 +105,7 @@ export default class DigitalGoldPrices extends Component {
             },
             axisX: {
                 title: "Date",
-                interval: 1
+                interval: 7
             },
             toolTip: {
                 shared: true
@@ -113,13 +121,13 @@ export default class DigitalGoldPrices extends Component {
                     type: this.state.type,
                     name: "Buying prices",
                     tooltip: "{label}: {y}",
-                    dataPoints: this.state.buyPrice,
+                    dataPoints: this.state.buyPrices,
                 },
                 {
                     type: this.state.type,
                     name: "Selling prices",
                     tooltip: "{label}: {y}",
-                    dataPoints: this.state.sellPrice,
+                    dataPoints: this.state.sellPrices,
                 },
             ]
         };
@@ -161,6 +169,15 @@ export default class DigitalGoldPrices extends Component {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+
+                        <TextField
+                            label="Quantity"
+                            value={this.state.weight}
+                            onChange={(newValue) => this.setWeight(newValue)}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">g</InputAdornment>,
+                            }}
+                        />
 
                         <Button
                             title='Calculate PnL' variant='outlined'
