@@ -10,82 +10,91 @@ import DatePicker from '@material-ui/lab/DatePicker';
 
 export default class DigitalGoldPrices extends Component {
     state = {}
-    config = require('../../config').configs;
+    config = require('../../config').configs
 
-    updateChartData = (results) => {
-        var priceData = [], buyPrices = [], sellPrices = [];
-        var minimumPrice = 99999999999, maximumPrice = 0;
-        var minimumDate = '', maximumDate = '';
+    updateChartData = (days) => {
+        let getPricesUrl = utility.FormatString(this.config.getPricesUrl, [days])
+        axios.get(getPricesUrl)
+             .then(results => {
+                var priceData = [], buyPrices = [], sellPrices = [];
+                var minimumPrice = 99999999999, maximumPrice = 0
+                var minimumDate = '', maximumDate = ''
 
-        for(let i=0; i<results.data.length; i++) {
-            var currPrice = Number(results.data[i].price);
-            var buyPrice = Number((currPrice * 1.03).toFixed(2));
-            var sellPrice = Number((currPrice / 1.03).toFixed(2));
-            var currDate = results.data[i].date;
+                for(let i=0; i<results.data.length; i++) {
+                    var currPrice = Number(results.data[i].price);
+                    var buyPrice = Number((currPrice * 1.03).toFixed(2));
+                    var sellPrice = Number((currPrice / 1.03).toFixed(2));
+                    var currDate = results.data[i].date;
 
-            priceData.push({ label: currDate, y: currPrice });
-            buyPrices.push({ label: currDate, y: buyPrice });
-            sellPrices.push({ label: currDate, y: sellPrice });
+                    priceData.push({ label: currDate, y: currPrice });
+                    buyPrices.push({ label: currDate, y: buyPrice });
+                    sellPrices.push({ label: currDate, y: sellPrice });
 
-            minimumPrice = Math.min(minimumPrice, sellPrice);
-            maximumPrice = Math.max(maximumPrice, buyPrice);
+                    minimumPrice = Math.min(minimumPrice, sellPrice);
+                    maximumPrice = Math.max(maximumPrice, buyPrice);
 
-            if(i === 0)
-                minimumDate = currDate;
-            else if(i === results.data.length-1)
-                maximumDate = currDate;
-        }
+                    if(i === 0)
+                        minimumDate = currDate;
+                    else if(i === results.data.length-1)
+                        maximumDate = currDate;
+                }
 
-        this.setState({
-            price: priceData,
-            buyPrices: buyPrices,
-            sellPrices: sellPrices,
-            minimumPrice: minimumPrice - 100,
-            maximumPrice: maximumPrice + 100,
-            minimumDate: utility.ConvertStringToDate(minimumDate),
-            maximumDate: utility.ConvertStringToDate(maximumDate),
-            buyDate: minimumDate,
-            sellDate: maximumDate,
-            isLoaded: true,
-            weight: 0
-        });
-        this.setProfit();
+                this.setState({
+                    isLoaded: true,
+                    price: priceData,
+                    buyPrices: buyPrices,
+                    sellPrices: sellPrices,
+                    minimumPrice: minimumPrice - 100,
+                    maximumPrice: maximumPrice + 100,
+                    minimumDate: utility.ConvertStringToDate(minimumDate),
+                    maximumDate: utility.ConvertStringToDate(maximumDate),
+                    buyDate: minimumDate,
+                    sellDate: maximumDate,
+                    weight: 0
+                })
+
+                this.setProfit()
+            })
     }
 
     setProfit = () => {
         axios.get(utility.FormatString(this.config.pnlCalculateUrl, [this.state.buyDate, this.state.sellDate]))
-            .then(results => this.setState({ profit: Number(results.data.PnL * this.state.weight).toFixed(2) }));
+             .then(results => this.setState({ profit: Number(results.data.PnL * this.state.weight).toFixed(2) }));
     }
 
     setSellDate = (date) => {
-        this.setState({ sellDate: utility.ConvertDateFormat(date, "YYYY-MM-DD") });
+        this.setState({
+            sellDate: utility.ConvertDateFormat(date, "YYYY-MM-DD")
+        })
     }
 
     setBuyDate = (date) => {
-        this.setState({ buyDate: utility.ConvertDateFormat(date, "YYYY-MM-DD") });
+        this.setState({
+            buyDate: utility.ConvertDateFormat(date, "YYYY-MM-DD")
+        })
     }
 
     setWeight = (event) => {
-        this.setState({ weight: event.target.value });
+        this.setState({
+            weight: event.target.value
+        })
     }
 
     refreshHandler = () => {
-        axios.post(this.config.basePriceUrl + this.config.savePricesPath)
-            .then(() => axios.get(this.config.basePriceUrl + this.config.getHistoricalPricesPath))
-            .then(results => this.updateChartData(results));
+        axios.post(this.config.savePricesUrl)
+            .then(() => this.updateChartData())
     }
 
     constructor(props) {
         super(props);
         this.state = {
             isLoaded: false,
-            type: "line",
-        };
+            type: "line"
+        }
     }
 
     componentDidMount() {
-        axios.get(this.config.basePriceUrl + this.config.getHistoricalPricesPath)
-            .then(results => this.updateChartData(results));
+        this.updateChartData(100)
     }
 
     render() {
@@ -147,6 +156,33 @@ export default class DigitalGoldPrices extends Component {
                         </div>
 
                         <CanvasJSChart options = {options} /> <br/>
+
+                        <div>
+                            <Button
+                                title='1w' variant='outlined'
+                                onClick={() => this.updateChartData(7)} >
+                                1w
+                            </Button>
+
+                            <Button
+                                title='1m' variant='outlined'
+                                onClick={() => this.updateChartData(30)} >
+                                1m
+                            </Button>
+
+                            <Button
+                                title='6m' variant='outlined'
+                                onClick={() => this.updateChartData(180)} >
+                                6m
+                            </Button>
+
+                            <Button
+                                title='1y' variant='outlined'
+                                onClick={() => this.updateChartData(365)} >
+                                1y
+                            </Button>
+                        </div>
+                        <br/>
 
                         <LocalizationProvider dateAdapter={DateAdapter}>
                             <DatePicker
