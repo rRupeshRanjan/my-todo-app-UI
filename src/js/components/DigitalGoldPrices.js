@@ -4,9 +4,6 @@ import utility from '../renderer/Utility';
 import { CanvasJSChart } from 'canvasjs-react-charts';
 import { Button } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
-import DateAdapter from '@material-ui/lab/AdapterMoment';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import DatePicker from '@material-ui/lab/DatePicker';
 
 export default class DigitalGoldPrices extends Component {
     state = {}
