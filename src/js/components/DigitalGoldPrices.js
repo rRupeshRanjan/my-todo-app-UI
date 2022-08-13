@@ -34,11 +34,17 @@ export default class DigitalGoldPrices extends Component {
                     price: priceData,
                     minimumPrice: minimumPrice - 100,
                     maximumPrice: maximumPrice + 100,
+                    xAxisInterval: utility.GetInterval(days),
                 })
             })
     }
 
-    refreshHandler = () => {
+    fetchCurrentPrice = () => {
+        axios.get(this.config.getCurrentPriceUrl)
+            .then(results => this.setState({currentPrice: results.data.price}))
+    }
+
+    chartRefreshHandler = () => {
         axios.post(this.config.savePricesUrl)
             .then(() => this.updateChartData(100))
     }
@@ -47,11 +53,13 @@ export default class DigitalGoldPrices extends Component {
         super(props);
         this.state = {
             isLoaded: false,
+            xAxisInterval: 7,
         }
     }
 
     componentDidMount() {
         this.updateChartData(100)
+        this.fetchCurrentPrice()
     }
 
     render() {
@@ -61,7 +69,7 @@ export default class DigitalGoldPrices extends Component {
             zoomEnabled: true,
             theme: "light2", // "dark2"
             title:{
-                text: "MMTC PAMP Gold Prices"
+                text: "MMTC PAMP Gold Price Chart"
             },
             axisY: {
                 title: "Rate(per 1g)",
@@ -71,7 +79,7 @@ export default class DigitalGoldPrices extends Component {
             },
             axisX: {
                 title: "Date",
-                interval: 7
+                interval: this.state.xAxisInterval,
             },
             toolTip: {
                 shared: true
@@ -91,38 +99,54 @@ export default class DigitalGoldPrices extends Component {
                 {
                     this.state.isLoaded &&
                     <div>
+                        <div style={{ display: 'inline-block', padding: '10px' }}>
+                            <p style={{ fontWeight: 'bold', fontSize: '26px' }}>
+                                Current price: {this.state.currentPrice}
+                                <Button
+                                    title='Refresh'
+                                    variant='outlined'
+                                    onClick={() => this.fetchCurrentPrice()}>
+                                    Refresh
+                               </Button>
+                            </p>
+                        </div>
+
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button
                                 title='Refresh' variant='contained' startIcon={<Refresh/>}
                                 style={{color: 'green', fontSize: '20px', background: 'white'}}
-                                onClick={() => this.refreshHandler()}>
+                                onClick={() => this.chartRefreshHandler()}>
                                 Refresh
                             </Button>
                         </div>
 
                         <CanvasJSChart options = {options} /> <br/>
 
-                        <div>
+                        <div style={{ display: 'inline-block' }}>
                             <Button
-                                title='1w' variant='outlined'
+                                title='1w'
+                                variant='outlined'
                                 onClick={() => this.updateChartData(7)} >
                                 1w
                             </Button>
 
                             <Button
-                                title='1m' variant='outlined'
+                                title='1m'
+                                variant='outlined'
                                 onClick={() => this.updateChartData(30)} >
                                 1m
                             </Button>
 
                             <Button
-                                title='6m' variant='outlined'
+                                title='6m'
+                                variant='outlined'
                                 onClick={() => this.updateChartData(180)} >
                                 6m
                             </Button>
 
                             <Button
-                                title='1y' variant='outlined'
+                                title='1y'
+                                variant='outlined'
                                 onClick={() => this.updateChartData(365)} >
                                 1y
                             </Button>

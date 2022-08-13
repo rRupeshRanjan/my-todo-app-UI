@@ -31,6 +31,15 @@ class Utils {
         }
         return string
     }
+
+    GetInterval(days) {
+        if(days === 7)
+            return 1;
+        else if(days === 30)
+            return 7;
+        else
+            return 30;
+    }
 }
 
 const utility = new Utils();
