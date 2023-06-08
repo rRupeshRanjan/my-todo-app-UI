@@ -150,6 +150,13 @@ export default class DigitalGoldPrices extends Component {
                                 onClick={() => this.updateChartData(365)} >
                                 1y
                             </Button>
+
+                            <Button
+                                title='All time'
+                                variant='outlined'
+                                onClick={() => this.updateChartData(999999)} >
+                                All Time
+                            </Button>
                         </div>
                     </div>
                 }
